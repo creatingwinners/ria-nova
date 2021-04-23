@@ -130,7 +130,7 @@ class User extends Resource
                 ->updateRules('unique:users,email,{{resourceId}}')
                 ->hideFromIndex(),
 
-            Date::make('Created At')->onlyOnIndex()->sortable(),
+            // Date::make('Created At')->onlyOnIndex()->sortable(),
 
             Password::make('Password')
                 ->onlyOnForms()
