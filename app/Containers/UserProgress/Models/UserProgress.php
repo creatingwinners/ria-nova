@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Containers\Progress\Models;
+namespace App\Containers\UserProgress\Models;
 
 use App\Containers\Trail\Models\Trail;
 use App\Containers\User\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Progress extends Model
+class UserProgress extends Model
 {
     use HasFactory;
 
-    protected $table = 'trail_progresses';
+    protected $table = 'user_progress';
 
     public function trail()
     {

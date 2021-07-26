@@ -6,6 +6,7 @@ use App\Containers\Customer\Models\Customer;
 use App\Containers\Localization\Actions\GetAllCountriesAction;
 use App\Containers\Localization\Actions\GetAllLanguagesAction;
 use App\Containers\Role\Models\Role;
+use App\Containers\UserProgress\Models\UserProgress;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -77,6 +78,11 @@ class User extends Authenticatable implements HasMedia
         return $this->morphToMany(Role::class, 'model', 'model_has_roles');
     }
 
+    public function user_progress()
+    {
+        return $this->hasMany(UserProgress::class);
+    }
+
     public function highestRole()
     {
         return $this->morphToMany(Role::class, 'model', 'model_has_roles')->orderBy('roles.level', 'desc');
@@ -86,4 +92,5 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->firstname . ' ' . $this->lastname;
     }
+
 }

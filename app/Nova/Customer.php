@@ -7,13 +7,13 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Line;
-use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Stack;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
+use Saumini\Count\RelationshipCount;
 
 class Customer extends Resource
 {
@@ -41,21 +41,6 @@ class Customer extends Resource
         'company',
     ];
 
-    // Overwrite the indexQuery to include relationship count
-    public static function indexQuery(NovaRequest $request, $query)
-    {
-        // Give relationship name as alias else Laravel will name it as comments_count
-        return $query
-            ->withCount('trails as trailsCount')
-            ->withCount('users as usersCount')
-            ->withCount('activeUsers as activeUsersCount');
-    }
-
-    public static function relatableUsers(NovaRequest $request, $query)
-    {
-        return $query->where('customer_id', $request->resourceId);
-    }
-
     /**
      * Get the fields displayed by the resource.
      *
@@ -76,9 +61,15 @@ class Customer extends Resource
             ->sortable()
             ->onlyOnIndex(),
             Text::make('Company')->hideFromIndex()->sortable(),
-            Number::make('Trails', 'trailsCount')->sortable()->textAlign('center')->onlyOnIndex(),
-            Number::make('Users', 'usersCount')->sortable()->textAlign('center')->onlyOnIndex(),
-            Number::make('Active', 'activeUsersCount')->sortable()->textAlign('center')->onlyOnIndex(),
+
+            RelationshipCount::make('Trails', 'trails')->onlyOnIndex(),
+            RelationshipCount::make('Public', 'public_users')->onlyOnIndex(),
+            RelationshipCount::make('Players', 'player_users')->onlyOnIndex(),
+            RelationshipCount::make('Active', 'active_users')->onlyOnIndex(),
+
+            // company_style
+            // HasOne::make('company_style')->hideFromIndex(),
+
             BelongsTo::make('Owner', 'root', User::class)->searchable()->withSubtitles()->hideFromIndex(),
             Date::make('Created At')->sortable()->onlyOnIndex(),
 
